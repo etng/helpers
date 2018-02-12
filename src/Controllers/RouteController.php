@@ -16,9 +16,11 @@ class RouteController extends Controller
     public function index()
     {
         return Admin::content(function (Content $content) {
+
             $model = $this->getModel()->setRoutes($this->getRoutes());
 
             $content->body(Admin::grid($model, function (Grid $grid) {
+
                 $colors = [
                     'GET'    => 'green',
                     'HEAD'   => 'gray',
@@ -26,12 +28,12 @@ class RouteController extends Controller
                     'PUT'    => 'yellow',
                     'DELETE' => 'red',
                     'PATCH'  => 'aqua',
-                    'OPTIONS'=> 'light-blue',
+                    'OPTIONS'=> 'light-blue'
                 ];
 
                 $grid->method()->map(function ($method) use ($colors) {
                     return "<span class=\"label bg-{$colors[$method]}\">$method</span>";
-                })->implode('&nbsp;');
+                })->implode("&nbsp;");
 
                 $grid->uri()->display(function ($uri) {
                     return preg_replace('/\{.+?\}/', '<code>$0</span>', $uri);
@@ -61,7 +63,8 @@ class RouteController extends Controller
 
     protected function getModel()
     {
-        return new class() extends Model {
+        return new class extends Model {
+
             protected $routes;
 
             protected $where = [];
@@ -88,6 +91,7 @@ class RouteController extends Controller
             public function get()
             {
                 $this->routes = collect($this->routes)->filter(function ($route) {
+
                     foreach ($this->where as $column => $condition) {
                         if (!Str::contains($route[$column], $condition)) {
                             return false;
@@ -95,6 +99,7 @@ class RouteController extends Controller
                     }
 
                     return true;
+
                 })->all();
 
                 $instance = $this->newModelInstance();
@@ -124,8 +129,7 @@ class RouteController extends Controller
     /**
      * Get the route information for a given route.
      *
-     * @param \Illuminate\Routing\Route $route
-     *
+     * @param  \Illuminate\Routing\Route  $route
      * @return array
      */
     protected function getRouteInformation(Route $route)
@@ -143,9 +147,8 @@ class RouteController extends Controller
     /**
      * Sort the routes by a given element.
      *
-     * @param string $sort
-     * @param array  $routes
-     *
+     * @param  string  $sort
+     * @param  array  $routes
      * @return array
      */
     protected function sortRoutes($sort, $routes)
@@ -158,8 +161,7 @@ class RouteController extends Controller
     /**
      * Get before filters.
      *
-     * @param \Illuminate\Routing\Route $route
-     *
+     * @param  \Illuminate\Routing\Route  $route
      * @return string
      */
     protected function getRouteMiddleware($route)
